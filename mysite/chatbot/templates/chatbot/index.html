@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+    <style>
+        /* Estilos del contenedor del chat */
+        .chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 300px;
+            height: 400px;
+            overflow-y: scroll;
+            padding: 10px;
+            display: none; /* Inicialmente oculto */
+            z-index: 9999;
+        }
+
+        /* Estilos de los mensajes del chat */
+        .message {
+            background-color: #f1f1f1;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        /* Estilos del formulario de entrada del chat */
+        .chat-input {
+            position: fixed;
+            bottom: 25px;
+        }
+
+        .chat-input input[type="text"] {
+            flex: 1;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+        }
+
+        .chat-input input[type="submit"] {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+
+        /* Estilos del botón del chat */
+        .chat-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <button class="chat-button" id="chat-button">Chat</button>
+
+    <div class="chat-containerr" id="chat-container">
+        <div id="chat-log" class="contenedor-msg" style="margin-bottom: 35px;">
+            <div class="message">¡Hola! Soy un chatbot. ¿En qué puedo ayudarte?</div>
+        </div>
+        <form class="chat-input">
+            <input id="chat-input" type="text"  placeholder="Escribe aquí tu mensaje...">
+            <input id="chat-submit" type="submit" value="Enviar">
+        </form>
+    </div>
+
+    <script>
+        // Función para enviar el mensaje del usuario
+        function senddMessage() {
+            var userInput = document.getElementById("chat-input").value;
+
+            // Crear un nuevo elemento de mensaje
+            var message = document.createElement("div");
+            message.classList.add("message");
+            message.textContent = userInput;
+
+            // Agregar el mensaje al contenedor del chat
+            var chatContainer = document.querySelector(".contenedor-msg");
+            chatContainer.appendChild(message);
+
+            // Limpiar el campo de entrada
+            document.getElementById("chat-input").value = "";
+        }
+
+        // Evento de envío del formulario
+        document.querySelector(".chat-input").addEventListener("submit", function(e) {
+            e.preventDefault();
+            sendMessage();
+        });
+
+        // Mostrar u ocultar el chat al hacer clic en el botón
+        var chatButton = document.getElementById("chat-button");
+        var chatContainer = document.getElementById("chat-container");
+        chatButton.addEventListener("click", function() {
+            if (chatContainer.style.display === "none") {
+                chatContainer.style.display = "block";
+            } else {
+                chatContainer.style.display = "none";
+            }
+        });
+    </script>
+    
+    <script>
+        
+
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/chatbot/'
+        );
+        // DEDPLEGAMOS EL MENSAJE EN EL CHATLOG
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            const chatLogElement = document.querySelector('#chat-log');
+            const newMessageElement = document.createElement('p');
+            newMessageElement.textContent = data.message;
+            chatLogElement.appendChild(newMessageElement);
+        };
+
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+
+        document.querySelector('#chat-input').onkeyup = function (e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#chat-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-submit').onclick = function (e) {
+            const messageInputDom = document.querySelector('#chat-input');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+        };
+
+        
+    </script>
+</body>
+</html>
