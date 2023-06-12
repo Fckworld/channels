@@ -39,16 +39,21 @@ class ChatConsumer(WebsocketConsumer):
         print("SE HA RECIBIDO")
     
     def chat_message(self,event):
-        message = event['message']
-        self.send(text_data = json.dumps(
-            {
-                'type':'chat',
-                'message':message
-            }
-        ))
+        try:
+            session_id = self.scope.get('session').session_key
+            message = event['message']
+            self.send(text_data = json.dumps(
+                {
+                    'type':'chat',
+                    'message':message
+                }
+            ))
 
-        print('Se ha llamado : CHATBOT_MESSAGE')
-        message = event['message']
+            print('Se ha llamado : CHATBOT_MESSAGE')
+            print('Sesion ID: '+session_id)
+            message = event['message']
+        except TypeError:
+            print("asdsa")
 
         # Guardar el mensaje en la base de datos
         if message !='':
