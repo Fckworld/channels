@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-+vl#3257%%1v-k)fdk&1$k^p063l18x928deg3*c^0#_qkv$ge
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -33,7 +33,9 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     "daphne",
     "chat",
+    'core',
     "chatbot",
+    'webhook',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -132,3 +134,9 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+META_API_TOKEN = 'EABZAM6PEeUBMBAMWzZCrR2gzWdz7RB1xUZB8MoGGxzC1oqLXQoQNwR92KtcfE9GZAG0dLY8SuXPXNf2ZAsoXNoryU0GpNSKxZCikzRZBZBxDXFPbYJmmZCi8uZCYFnQ5bMGogaqgwTfmWbr4tKWDg3F5nRmqUKYZB8dZB1IUBZCMYqXDLngOLZCHXg9PU2nYvXBkb4WmsMJdjoZBwtD9MhChjQ3MkdRbYy3bg6Vz4kZD'
+
+APP_SECRET = "7392ee971d76266f057660b8678fc989"
+
+TOKEN = "TOKEN_GENERADO_POR_MI"

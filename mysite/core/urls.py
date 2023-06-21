@@ -5,4 +5,5 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("whatsapp/",views.mandar_whatsapp, name="whatsapp"),
 ]
