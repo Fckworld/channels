@@ -72,15 +72,34 @@
         <div id="chat-log" class="contenedor-msg" style="margin-bottom: 35px;">
             <div class="message">¡Hola! Soy un chatbot. ¿En qué puedo ayudarte?</div>
         </div>
-        <form class="chat-input">
-            <input id="chat-input" type="text"  placeholder="Escribe aquí tu mensaje...">
+        <form method="POST" class="chat-input" action="{% url 'core:whatsapp' %}" >
+            {% csrf_token %}
+            <input id="chat-input" type="text"  placeholder="Escribe aquí tu mensaje..." name="mensaje_whatsapp_envio">
             <input id="chat-submit" type="submit" value="Enviar">
         </form>
     </div>
 
+    <!--SCRIPT QUE MANDA EL MENSAJE A LA VISTA DE WHATSAPP PARA MANDAR EL MENSAJE-->
+    <script>
+        document.getElementById("chat-submit").addEventListener("click", function() {
+        var userInput = document.getElementById("chat-input").value;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/whatsapp/", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+            // La solicitud se completó exitosamente, puedes realizar acciones adicionales aquí si es necesario
+            }
+        };
+        xhr.send("mensaje_whatsapp_envio=" + encodeURIComponent(userInput));
+        });
+
+    </script>
+    <!--SCRIPT QUE MANDA LOS MENSAJES A AL CHAT-->
     <script>
         // Función para enviar el mensaje del usuario
-        function senddMessage() {
+        function sendMessage() {
             var userInput = document.getElementById("chat-input").value;
 
             // Crear un nuevo elemento de mensaje
@@ -113,7 +132,11 @@
             }
         });
     </script>
-    
+    <!--
+        ESTE SCRIPT  MANDA LOS MENSAJES AL WEBSCOKET
+        Y
+        CAMBIA EL VALOR DEL INPUT A UN VALOR EN BLANCO PARA VOLVER A ESCRIBIR
+    -->
     <script>
         
 
@@ -148,10 +171,11 @@
             chatSocket.send(JSON.stringify({
                 'message': message
             }));
-            messageInputDom.value = '';
+            messageInputDom.value = 'NO ESTOY JEJE';
         };
 
         
     </script>
+    
 </body>
 </html>

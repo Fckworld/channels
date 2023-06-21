@@ -53,10 +53,10 @@ class ChatConsumer(WebsocketConsumer):
             print('Sesion ID: '+session_id)
             message = event['message']
         except TypeError:
-            print("asdsa")
+            print("error en chat_message")
 
         # Guardar el mensaje en la base de datos
         if message !='':
             ChatMessage.objects.create(message=message)
-        print('Mensaje guardado')
+        print('Mensaje guardado en el consumer')
         
